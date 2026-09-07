@@ -44,6 +44,8 @@ router.post('/:projectId/task',
     handleInputErrors,
     TaskCotroller.createTask)
 
+router.get('/:projectId/task', validateProyectExist, TaskCotroller.getProjectTasks)
+
 
 
 
