@@ -38,8 +38,7 @@ export const TaskSchema: Schema = new Schema({
     },
     project: {
         type: Types.ObjectId,
-        ref: 'Project',
-        required: true
+        ref: 'Project'
     },
     status: {
         type: String,
