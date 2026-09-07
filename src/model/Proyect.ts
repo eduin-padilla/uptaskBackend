@@ -8,7 +8,7 @@ export interface InterfaceProject extends Document {
     projectName: string
     clientName: string
     description: string
-    task: PopulatedDoc<InterfaceTask & Document>[]
+    tasks: PopulatedDoc<InterfaceTask & Document>[]
 
 
 }
@@ -32,7 +32,7 @@ const ProjectSchema: Schema = new Schema({
         required: true,
         trim: true
     },
-    task: [{
+    tasks: [{
         type: Types.ObjectId,
         ref: 'Task'
     }]
