@@ -9,6 +9,7 @@ import { validateProyectExist } from "../middleware/project.js"
 
 const router: Router = Router()
 
+router.param('projectId', validateProyectExist)
 
 router.post('/', [
     body('projectName').notEmpty().withMessage('El nombre del proyecto es obligatorio'),
@@ -24,6 +25,7 @@ router.get('/:id', [
 ], ProjectController.getProjectById)
 
 router.put('/:id', [
+    
     param('id').isMongoId().withMessage('ID inválido'),
     body('projectName').notEmpty().withMessage('El nombre del proyecto es obligatorio'),
     body('clientName').notEmpty().withMessage('El nombre del cliente es obligatorio'),
@@ -44,7 +46,9 @@ router.post('/:projectId/task',
     handleInputErrors,
     TaskCotroller.createTask)
 
-router.get('/:projectId/task', validateProyectExist, TaskCotroller.getProjectTasks)
+router.get('/:projectId/task', TaskCotroller.getProjectTasks)
+router.get('/:projectId/task/:taskId', [param('taskId').isMongoId().withMessage('ID inválido'),
+handleInputErrors], TaskCotroller.getTaskById)
 
 
 
