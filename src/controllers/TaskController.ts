@@ -34,5 +34,14 @@ export class TaskCotroller {
         }
  
     }
+    static getProjectTasks = async (req: Request, res: Response) => {
+        try {
+            const tasks = await Task.find({ project: req.project._id }).populate('project')
+            res.json(tasks)
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({ error: 'Error al obtener las tareas' })
+        }
 
+    }
 }
