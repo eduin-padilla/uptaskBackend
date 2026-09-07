@@ -1,4 +1,4 @@
-import { request, Request, Response } from "express"
+import {  Request, Response } from "express"
 
 import Task from "../model/Task.js"
 
@@ -43,5 +43,21 @@ export class TaskCotroller {
             res.status(500).json({ error: 'Error al obtener las tareas' })
         }
 
+    }
+    static getTaskById = async (req: Request, res: Response) => {
+        try {
+            const { taskId} = req.params
+            const task = await Task.findById(taskId)
+            if (!task) {
+                return res.status(404).json({ error: 'Tarea no encontrada' })
+            }
+            if (task.project.toString() !== req.project._id.toString()) {
+                return res.status(404).json({ error: 'Accion no valida' })
+            }
+            res.json(task)
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({ error: 'Error al obtener la tarea' })
+        }
     }
 }
