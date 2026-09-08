@@ -11,7 +11,7 @@ declare global {
     }
 }
 
-export async function validateProyectExist(req: Request, res: Response, next: NextFunction) {
+export async function projectExist(req: Request, res: Response, next: NextFunction) {
 
 
     try {
