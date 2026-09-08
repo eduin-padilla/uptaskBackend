@@ -22,7 +22,7 @@ export class TaskCotroller {
             req.project.tasks.push(task._id)
             
             await Promise.allSettled([
-                task.save(),
+                req.task.save(),
                 req.project.save()
             ])
               
@@ -46,18 +46,48 @@ export class TaskCotroller {
     }
     static getTaskById = async (req: Request, res: Response) => {
         try {
-            const { taskId} = req.params
-            const task = await Task.findById(taskId)
-            if (!task) {
-                return res.status(404).json({ error: 'Tarea no encontrada' })
-            }
-            if (task.project.toString() !== req.project._id.toString()) {
-                return res.status(404).json({ error: 'Accion no valida' })
-            }
-            res.json(task)
+            res.json(req.task)
         } catch (error) {
             console.log(error)
             res.status(500).json({ error: 'Error al obtener la tarea' })
         }
     }
+    static updateTask = async (req: Request, res: Response) => {
+        try {   
+            req.task.name = req.body.name
+            req.task.description = req.body.description
+            await req.task.save()
+            res.send('Tarea actualizada correctamente')
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({ error: 'Error al actualizar la tarea' })
+        }
+    }
+    static deleteTask = async (req: Request, res: Response) => {
+        try {
+
+            req.project.tasks = req.project.tasks.filter(task => task.toString() !== req.params.taskId)
+            
+            await Promise.allSettled([req.task.deleteOne(), req.project.save()]) 
+            
+            res.send('Tarea eliminada correctamente')
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({ error: 'Error al eliminar la tarea' })
+        }
+    }
+    static updateTaskStatus = async (req: Request, res: Response) => {
+
+        try {
+
+            const {status} = req.body
+            req.task.status = status
+            await req.task.save()
+            res.json({message: 'Estado de la tarea actualizado correctamente'})
+        } catch (error) {
+            
+        }
+        
+    }
 }
+            
