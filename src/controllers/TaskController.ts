@@ -22,7 +22,7 @@ export class TaskCotroller {
             req.project.tasks.push(task._id)
             
             await Promise.allSettled([
-                req.task.save(),
+                task.save(),
                 req.project.save()
             ])
               
