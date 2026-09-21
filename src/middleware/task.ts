@@ -1,9 +1,9 @@
 import type { Request, Response, NextFunction } from "express";
+import mongoose from "mongoose";
 import Task, { InterfaceTask } from "../model/Task.js";
 
 
 declare global {
-
     namespace Express {
         interface Request {
             task: InterfaceTask
@@ -13,16 +13,21 @@ declare global {
 
 export async function taskExit(req: Request, res: Response, next: NextFunction) {
 
-
     try {
-        const {taskId} = req.params
+        const { taskId } = req.params as {taskId: string}
+
+        if (!mongoose.Types.ObjectId.isValid(taskId)) {
+            const error = new Error('Tarea no encontrada')
+            return res.status(404).json({ error: error.message })
+        }
+
         const task = await Task.findById(taskId)
         
-        if(!task){
+        if (!task) {
             const error = new Error('tarea no encontrada')
             return res.status(404).json({ error: error.message })
         }
-        req.task= task
+        req.task = task
         next()
     } catch (error) {
         res.status(500).json({ error: 'Hubo un error' })
