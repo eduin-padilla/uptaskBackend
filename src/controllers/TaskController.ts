@@ -4,7 +4,6 @@ import Task from "../model/Task.js"
 
 export class TaskCotroller {
 
-
     static createTask = async (req: Request, res: Response) => {
       
         try {

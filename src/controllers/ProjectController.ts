@@ -18,7 +18,6 @@ export class ProjectController {
         }
 
     }
-
     static getAllProjects = async (req: Request, res: Response) => {
 
         try {
@@ -62,7 +61,6 @@ export class ProjectController {
         }
 
     }
-
     static deleteProject = async (req: Request, res: Response) => {
 
         try {
