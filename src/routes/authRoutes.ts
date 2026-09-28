@@ -27,6 +27,13 @@ router.post('/cormation-account',
     AuthController.confirmateAccount
 )
 
+router.post('/login',
+    body('email').isEmail().withMessage('Email no valido'),
+    body('password').notEmpty().withMessage('La contraseña no puede ir vacia'),
+    handleInputErrors,
+    AuthController.login
+)
+
 
 
 
