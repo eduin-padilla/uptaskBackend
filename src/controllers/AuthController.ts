@@ -3,7 +3,6 @@ import User from "../model/User.js"
 import { checkPassword, haspassword } from "../utils/auth.js"
 import Token from "../model/Token.js"
 import { generateToken } from "../utils/token.js"
-import { transport } from "../config/nodeMailer.js"
 import { AuthEmail } from "../emails/AuthEmail.js"
 
 export class AuthController {
@@ -59,7 +58,7 @@ export class AuthController {
             const user = await User.findById(tokenExist.user)
             user.confirmed = true
             await Promise.allSettled([user.save(), tokenExist.deleteOne()])
-            res.send('Cuenta creada correctamente')
+            res.send('Cuenta confirmada correctamente')
 
         } catch (error) {
             res.status(500).json({error: 'hubo un error'})
@@ -105,6 +104,44 @@ export class AuthController {
                 return res.status(401).json({error: error.message})
             }
             res.send('autenticado...')
+
+        } catch (error) {
+            res.status(500).json({error: 'hubo un error'})
+        }
+
+    }
+    static requestConfirmationCode = async(req: Request, res: Response) => {
+
+        try {
+            
+            const {email} = req.body
+            const user = await User.findOne({email})
+
+            if(!user){
+                const error = new Error('Usuario no esta registrado')
+                return res.status(404).json({error: error.message})
+            }
+            if(user.confirmed){
+                const error = new Error('Usuario ya esta confirmado')
+                return res.status(403).json({error: error.message})
+            }
+
+                const token = new Token()
+
+                token.user = user._id
+                token.token = generateToken()
+                await token.save()
+
+                //enviar token al email
+                AuthEmail.sendConfirmationEmail({
+                    email: user.email,
+                    name: user.name,
+                    token: token.token
+                })
+
+                await Promise.allSettled([user.save(), token.save()])
+                res.send('Se envio un nuevo correo')
+            
 
         } catch (error) {
             res.status(500).json({error: 'hubo un error'})

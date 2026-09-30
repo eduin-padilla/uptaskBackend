@@ -21,7 +21,7 @@ router.post('/create-account',
     handleInputErrors,
     AuthController.createAccount)
 
-router.post('/cormation-account',
+router.post('/confirm-account',
     body('token').notEmpty().withMessage('Debes ingresar el token'),
     handleInputErrors,
     AuthController.confirmateAccount
@@ -33,6 +33,13 @@ router.post('/login',
     handleInputErrors,
     AuthController.login
 )
+
+router.post('/request-code',
+    body('email').isEmail().withMessage('Email no valido'),
+    handleInputErrors,
+    AuthController.requestConfirmationCode
+)
+
 
 
 
