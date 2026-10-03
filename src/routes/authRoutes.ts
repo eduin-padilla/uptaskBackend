@@ -51,7 +51,7 @@ router.post('/validate-token',
     AuthController.validateToken
 )
 
-router.post('/upate-password/:token',    
+router.post('/update-password/:token',    
     param('token').isNumeric().withMessage('Token No valido'),
     body('password').notEmpty().withMessage('La contraseña es requerida')
     .matches(/^\S+$/).withMessage('La contraseña no debe contener espacios en blanco').isLength({ min: 8 }).withMessage('Debe tener al menos 8 caracteres').matches(/[A-Z]/).withMessage('Debe contener al menos una letra mayúscula').matches(/[\W_]/).withMessage('Debe contener al menos un carácter especial'),
