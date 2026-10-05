@@ -4,6 +4,7 @@ import { checkPassword, haspassword } from "../utils/auth.js"
 import Token from "../model/Token.js"
 import { generateToken } from "../utils/token.js"
 import { AuthEmail } from "../emails/AuthEmail.js"
+import { generateJWT } from "../utils/jwt.js"
 
 export class AuthController {
      
@@ -101,7 +102,8 @@ export class AuthController {
                 const error = new Error('Password incorrecto')
                 return res.status(401).json({error: error.message})
             }
-            res.send('autenticado...')
+            const token = generateJWT({id: user._id})
+            res.send(token)
 
         } catch (error) {
             res.status(500).json({error: 'hubo un error'})

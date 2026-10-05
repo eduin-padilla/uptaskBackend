@@ -5,6 +5,7 @@ import { handleInputErrors } from "../middleware/validation.js"
 import { TaskCotroller } from "../controllers/TaskController.js"
 import { projectExist } from "../middleware/project.js"
 import { taskBelongsToProject, taskExit } from "../middleware/task.js"
+import { authenticate } from "../middleware/auth.js"
 
 
 
@@ -12,12 +13,13 @@ const router: Router = Router()
 
 router.param('projectId', projectExist)
 
-router.post('/', [
+router.post('/', 
+    authenticate,
     body('projectName').notEmpty().withMessage('El nombre del proyecto es obligatorio'),
     body('clientName').notEmpty().withMessage('El nombre del cliente es obligatorio'),
     body('description').notEmpty().withMessage('La descripción del proyecto es obligatoria'),
     handleInputErrors
-], ProjectController.createProject)
+, ProjectController.createProject)
 
 router.get('/', ProjectController.getAllProjects)
 
@@ -51,13 +53,12 @@ router.post('/:projectId/task',
     handleInputErrors,
 TaskCotroller.createTask)
 
-
-
 router.get('/:projectId/task', 
 TaskCotroller.getProjectTasks)
 
 router.param('taskId', taskExit)
 router.param('taskId', taskBelongsToProject)
+
 router.get('/:projectId/task/:taskId', 
 [param('taskId').isMongoId().withMessage('ID inválido'),
 handleInputErrors],
