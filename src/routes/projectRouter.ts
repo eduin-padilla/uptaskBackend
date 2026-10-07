@@ -11,10 +11,11 @@ import { authenticate } from "../middleware/auth.js"
 
 const router: Router = Router()
 
-router.param('projectId', projectExist)
+
+router.use(authenticate)
 
 router.post('/', 
-    authenticate,
+    
     body('projectName').notEmpty().withMessage('El nombre del proyecto es obligatorio'),
     body('clientName').notEmpty().withMessage('El nombre del cliente es obligatorio'),
     body('description').notEmpty().withMessage('La descripción del proyecto es obligatoria'),
@@ -43,7 +44,6 @@ router.delete('/:id', [
 ], ProjectController.deleteProject)
 
 /** Rutas para el task*/
-
 router.param('projectId', projectExist)
 
 router.post('/:projectId/task', 
