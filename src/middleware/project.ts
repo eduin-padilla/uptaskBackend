@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import Project, { InterfaceProject } from "../model/Proyect.js"
+import Project, { InterfaceProject } from "../model/Project.js"
 
 
 declare global {
