@@ -66,7 +66,7 @@ export class TeamMemberController{
 
         await req.project.save()
 
-        res.send({msg: 'el usuario se elimino correctamente del proyecto'})
+        res.send('Usuario eliminado correctamente')
     }
     
 
