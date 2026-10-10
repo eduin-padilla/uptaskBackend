@@ -1,5 +1,5 @@
 import type { Request, Response } from "express"
-import Project from "../model/Proyect.js"
+import Project from "../model/Project.js"
 
 
 
