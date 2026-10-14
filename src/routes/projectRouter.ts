@@ -4,7 +4,7 @@ import {body, param} from 'express-validator'
 import { handleInputErrors } from "../middleware/validation.js"
 import { TaskCotroller } from "../controllers/TaskController.js"
 import { projectExist } from "../middleware/project.js"
-import { taskBelongsToProject, taskExit } from "../middleware/task.js"
+import { hasAuthorization, taskBelongsToProject, taskExit } from "../middleware/task.js"
 import { authenticate } from "../middleware/auth.js"
 import { TeamMemberController } from "../controllers/TeamController.js"
 
@@ -48,7 +48,7 @@ router.delete('/:id', [
 router.param('projectId', projectExist)
 
 router.post('/:projectId/task', 
-    projectExist,
+    hasAuthorization,
     body('name').notEmpty().withMessage('El nombre de la tarea es obligatorio'),
     body('description').notEmpty().withMessage('La descripción de la tarea es obligatoria'),
     handleInputErrors,
@@ -66,6 +66,7 @@ handleInputErrors],
 TaskCotroller.getTaskById)
 
 router.put('/:projectId/task/:taskId', [
+    hasAuthorization,
     param('taskId').isMongoId().withMessage('ID inválido'),
     body('name').notEmpty().withMessage('El nombre de la tarea es obligatorio'),
     body('description').notEmpty().withMessage('La descripción de la tarea es obligatoria'),
@@ -73,6 +74,7 @@ router.put('/:projectId/task/:taskId', [
 ], TaskCotroller.updateTask)
 
 router.delete('/:projectId/task/:taskId', [
+    hasAuthorization,
     param('taskId').isMongoId().withMessage('ID inválido'),
     handleInputErrors
 ], TaskCotroller.deleteTask)
