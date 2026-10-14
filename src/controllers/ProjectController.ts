@@ -25,9 +25,8 @@ export class ProjectController {
         try {
             const projects = await Project.find({
                 $or: [
-                    {manager: { 
-                        $in: req.user._id
-                    }}
+                    { manager: {$in: req.user._id} },
+                    { team: { $in: [req.user._id] } }
                 ]
             })
             res.json(projects)
@@ -44,7 +43,7 @@ export class ProjectController {
             if (!project) {
                 return res.status(404).json({ error: 'Proyecto no encontrado' })
             }
-            if(project.manager.toString() !== req.user._id.toString()){
+            if(project.manager.toString() !== req.user._id.toString() && !project.team.includes(req.user._id)){
                 return res.status(403).json({ error: 'No tienes permiso para ver este proyecto' })
             }
             res.json(project)
