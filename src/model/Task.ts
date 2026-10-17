@@ -13,13 +13,17 @@ const taskStatus = {
 export type TaskStatus  = typeof taskStatus[keyof typeof taskStatus]
 
 
-
 export interface InterfaceTask extends Document {
         
     name: string
     description: string
     project: Types.ObjectId
     status: TaskStatus
+    completedBy: {
+        push(data: { user: Types.ObjectId; status: any; }): unknown;
+        user: Types.ObjectId,
+        status: TaskStatus
+    }
 
 }
 
@@ -44,7 +48,21 @@ export const TaskSchema: Schema = new Schema({
         type: String,
         enum: Object.values(taskStatus),
         default: taskStatus.PENDING
-    }
+    },
+    completedBy: [{
+        user:{
+            type: Types.ObjectId,
+            ref: 'User',
+            default: null,
+        },
+        status:{
+            type: String,
+            enum: Object.values(taskStatus),
+            default: taskStatus.PENDING
+        }
+
+        
+    }]
 
 }, {timestamps: true})
 
