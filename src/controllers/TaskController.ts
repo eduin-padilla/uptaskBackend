@@ -46,9 +46,8 @@ export class TaskCotroller {
     static getTaskById = async (req: Request, res: Response) => {
         try {
 
-            const task = await Task.findById(req.task._id).populate(
-                {path: 'completedBy.user', select: '_id name email'}
-            )
+            const task = await Task.findById(req.task._id)
+            .populate({path: 'completedBy.user', select: '_id name email'}).populate({path: 'notes', populate: {path: 'createdBy', select:'_id name email'}})
             res.json(task)
         } catch (error) {
             console.log(error)
@@ -95,9 +94,12 @@ export class TaskCotroller {
             await req.task.save()
             res.json({message: 'Estado de la tarea actualizado correctamente'})
         } catch (error) {
+            console.log(error)
+            res.status(500).json({ error: 'Error al actualizar el estado de la tarea' })
             
         }
         
     }
+
 }
             

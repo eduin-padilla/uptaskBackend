@@ -1,12 +1,12 @@
 import type { Request, Response, NextFunction } from "express";
 import mongoose from "mongoose";
-import Task, { InterfaceTask } from "../model/Task.js";
+import Task, { ITask } from "../model/Task.js";
 
 
 declare global {
     namespace Express {
         interface Request {
-            task: InterfaceTask
+            task: ITask
         }
     }
 }

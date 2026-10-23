@@ -7,11 +7,11 @@ import { projectExist } from "../middleware/project.js"
 import { hasAuthorization, taskBelongsToProject, taskExit } from "../middleware/task.js"
 import { authenticate } from "../middleware/auth.js"
 import { TeamMemberController } from "../controllers/TeamController.js"
+import { NoteController } from "../controllers/NoteController.js"
 
 
 
 const router: Router = Router()
-
 
 router.use(authenticate)
 
@@ -87,7 +87,6 @@ router.post('/:projectId/task/:taskId/status', [
 
 
 // routes for teams
-
 router.post('/:projectId/team/find', [
 
     body('email').isEmail().toLowerCase().withMessage('El email no es válido'),
@@ -111,5 +110,20 @@ router.get('/:projectId/team', [
     TeamMemberController.getProjectTeam
 ])
 
+
+//routes for notes
+
+router.post('/:projectId/tasks/:taskId/notes', [
+    body('content').notEmpty().withMessage('El contenido de la nota es obligatoria'), handleInputErrors, NoteController.createNote
+])
+
+router.get('/:projectId/tasks/:taskId/notes', [
+ NoteController.getTaskNote
+])
+
+router.delete('/:projectId/tasks/:taskId/notes/:noteId', [
+    param('noteId').isMongoId().withMessage('Id no valido'),
+    handleInputErrors, NoteController.deleteNote
+])
 
 export default router
