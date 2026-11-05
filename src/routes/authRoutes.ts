@@ -68,8 +68,31 @@ router.post('/update-password/:token',
 
 router.get('/user', authenticate, AuthController.user)
 
+//Profile
 
+router.put('/profile', 
+    authenticate,
+    body('name').notEmpty().withMessage('El nombre no puede ir vacio'),
+    body('email').isEmail().withMessage('Email no valido'),
+    handleInputErrors,
+    AuthController.updateProfile
+)
 
+router.post('/update-password',
+
+    authenticate,
+    body('current_password').notEmpty().withMessage('la contraseña no puede ir vacia'),
+    body('password').notEmpty().withMessage('La contraseña es requerida')
+    .matches(/^\S+$/).withMessage('La contraseña no debe contener espacios en blanco').isLength({ min: 8 }).withMessage('Debe tener al menos 8 caracteres').matches(/[A-Z]/).withMessage('Debe contener al menos una letra mayúscula').matches(/[\W_]/).withMessage('Debe contener al menos un carácter especial'),
+    body('password_confirmation').custom((value, {req}) => {
+        if(value !== req.body.password){ 
+            throw new Error('Los password no son iguales')
+        }
+        return true
+    }),
+    handleInputErrors, AuthController.updateCurrentUserPassword
+
+)
 
 
 
